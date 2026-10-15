@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyber Detective: Shop Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1e8ff;--panel:#fff7e8;--ink:#2b2140;--mut:#6b5f82;--line:#d9c9ee;--mint:#2fae82;--coral:#e8574a;--butter:#ffcf5c;--sky:#4a9ee0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1530;--panel:#2b2140;--ink:#fff4e0;--mut:#b9abd4;--line:#46386a;--mint:#5fd3a6;--coral:#ff7b6b;--sky:#7cc4ff}}
+:root[data-theme="dark"]{--bg:#1d1530;--panel:#2b2140;--ink:#fff4e0;--mut:#b9abd4;--line:#46386a;--mint:#5fd3a6;--coral:#ff7b6b;--sky:#7cc4ff}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 'Be Vietnam Pro',system-ui,sans-serif}
+button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--butter);color:#2b2140;border-radius:8px;padding:8px 12px;font-weight:600;box-shadow:0 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+button:hover{transform:translateY(-1px)}button:active{transform:translateY(3px);box-shadow:none}
+button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+button.g{background:var(--mint)}button.r{background:var(--coral);color:#fff}button.w{background:var(--panel);color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 14px;background:var(--ink);color:var(--panel)}
+.hud b{font-weight:800}.hud .sp{flex:1}.chip{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:99px}
+.hud button{padding:4px 10px;font-size:13px}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;padding:14px;max-width:1150px;margin:auto}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.box{background:var(--panel);border:2px solid var(--ink);border-radius:12px;padding:12px}
+.scene{position:relative;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#f3dcc0;aspect-ratio:640/240}
+.scene svg.bg{width:100%;height:100%;display:block}
+.pc{position:absolute;bottom:13%;width:13%;transition:left 1.2s ease-out;image-rendering:pixelated}
+.pc svg{width:100%;display:block;shape-rendering:crispEdges}
+#cust{left:-15%}#cust.in{left:44%}#me{left:70%}
+.pc svg{animation:bob 2.4s steps(2) infinite}@keyframes bob{50%{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#dlg{margin-top:12px;min-height:200px}
+.bub{background:#fff;color:#2b2140;border:2px solid var(--ink);border-radius:12px;padding:8px 12px;margin:6px 0 10px}
+.muted{color:var(--mut)}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.txc{background:#fff;color:#2b2140;border:2px dashed var(--sky);border-radius:10px;padding:8px 12px;font-size:14px}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;border:2px solid var(--ink)}
+.bar i{display:block;height:100%;background:var(--mint);width:100%}
+.bar.lo i{background:var(--coral)}
+.ev{background:#fff;color:#2b2140;border-radius:12px;padding:8px 12px;margin:6px 0;border:2px solid var(--line)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs button{padding:5px 10px;font-size:13px;box-shadow:none}
+.tabs button.on{background:var(--ink);color:var(--panel)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--coral);margin-left:4px}
+.rv{border-bottom:1px solid var(--line);padding:6px 0}.st{color:#e0a100;letter-spacing:1px}
+.lesson{border-left:5px solid var(--sky);padding:4px 10px;margin:8px 0;background:rgba(74,158,224,.12)}
+.overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9;overflow:auto}
+.overlay .box{max-width:520px}h1{margin:0 0 4px;font-weight:800;font-size:30px;line-height:1.15}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--panel);padding:8px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:92%}
+#toast.on{opacity:1}
+.tbl{width:100%;border-collapse:collapse}.tbl td{padding:3px 0}.shade{position:absolute;inset:0;pointer-events:none;transition:background 1s}.pat i{background:var(--sky)}.sum td{padding:3px 12px 3px 0}.ctl{display:flex;gap:6px;flex-wrap:wrap;padding:6px 8px;border-bottom:1px solid var(--line);max-height:100px;overflow:auto}.ctl button{padding:3px 8px;font-size:12px;box-shadow:none}.cw{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:330px;max-width:calc(100% - 24px);height:430px;max-height:70vh;display:none;flex-direction:column;background:var(--panel);border:2px solid var(--ink);border-radius:14px;box-shadow:0 8px 0 rgba(0,0,0,.25);z-index:8;animation:pop .2s}@keyframes pop{from{transform:translateY(20px);opacity:0}}.ch{display:flex;align-items:center;gap:6px;padding:8px;border-bottom:2px solid var(--ink);background:var(--sky);color:#102;border-radius:12px 12px 0 0}.ch button{padding:3px 8px;font-size:12px;box-shadow:none}#cav svg{width:30px;display:block;shape-rendering:crispEdges}.cm{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px}.mb{max-width:82%;padding:6px 10px;border-radius:14px;background:#fff;color:#2b2140;align-self:flex-start;font-size:14px;border:1px solid var(--line)}.mb.m{align-self:flex-end;background:var(--mint);color:#102}.mb.s{align-self:center;background:transparent;color:var(--mut);font-size:12px;text-align:center;border:0;max-width:95%}.ci{display:flex;gap:6px;padding:8px;border-top:2px solid var(--ink)}.ci input{flex:1;min-width:0;font:inherit;padding:6px 10px;border-radius:99px;border:2px solid var(--ink);background:#fff;color:#2b2140}
+</style></head><body>
+<div class="hud" id="hud"></div>
+<div class="grid">
+<section>
+ <div class="scene"><svg class="bg" viewBox="0 0 640 240" shape-rendering="crispEdges" aria-hidden="true">
+  <rect width="640" height="150" fill="#f3dcc0"/><rect y="150" width="640" height="90" fill="#d9b38c"/>
+  <g stroke="#c49b72" stroke-width="2"><path d="M0 180H640M0 210H640"/></g>
+  <rect x="14" y="34" width="70" height="90" fill="#7cc4ff" stroke="#2b2140" stroke-width="4"/><path d="M49 34V124M14 79H84" stroke="#2b2140" stroke-width="3"/>
+  <rect x="110" y="40" width="150" height="8" fill="#8a5a3c"/><rect x="110" y="80" width="150" height="8" fill="#8a5a3c"/><rect x="110" y="120" width="150" height="8" fill="#8a5a3c"/>
+  <g fill="#ff9c8f"><rect x="118" y="26" width="16" height="14"/><rect x="140" y="26" width="16" height="14"/><rect x="162" y="26" width="16" height="14"/></g>
+  <g fill="#ffd98a"><rect x="118" y="66" width="22" height="14"/><rect x="146" y="66" width="22" height="14"/><rect x="174" y="66" width="22" height="14"/></g>
+  <g fill="#8fd9ee"><rect x="120" y="106" width="10" height="14"/><rect x="136" y="106" width="10" height="14"/><rect x="152" y="106" width="10" height="14"/><rect x="168" y="106" width="10" height="14"/></g>
+  <rect x="300" y="20" width="150" height="36" fill="#2b2140"/><text x="375" y="44" fill="#ffcf5c" font-size="17" font-weight="800" text-anchor="middle" font-family="Be Vietnam Pro,sans-serif">TẠP HÓA NHỎ</text>
+  <rect x="420" y="150" width="220" height="70" fill="#8a5a3c"/><rect x="414" y="144" width="232" height="12" fill="#b57a52"/>
+  <rect x="520" y="118" width="46" height="26" fill="#2b2140"/><rect x="526" y="124" width="34" height="10" fill="#5fd3a6"/>
+  <rect x="590" y="100" width="16" height="44" fill="#4f9a5c"/><rect x="584" y="140" width="28" height="12" fill="#c9674f"/>
+ </svg>
+ <div class="shade" id="shade"></div><div class="pc" id="cust"></div><div class="pc" id="me"></div></div>
+ <div class="box" id="dlg" aria-live="polite"></div>
+</section>
+<aside class="box"><div class="tabs" id="tabs"></div><div id="panel"></div></aside>
+</div>
+<div id="start" class="overlay"><div class="box">
+ <h1>Cyber Detective:<br>Shop Life</h1>
+ <p>Bạn là chủ một tạp hóa nhỏ. Bán hàng, thối tiền, kiểm tra chuyển khoản, trả lời tin nhắn trên điện thoại. Khách thật nhiều hơn kẻ gian, nhưng có lúc khó phân biệt.</p>
+ <label><input type="checkbox" id="guided"> Chế độ hướng dẫn: thêm thời gian xác minh (25 giây thay vì 10)</label>
+ <p class="muted">Luật thử thách: hết giờ, game tự xác nhận giao dịch. Ngoài đời, đừng bao giờ tự xác nhận khi chưa thấy tiền ghi có.</p>
+ <div class="row"><button class="g" id="bNew">Bắt đầu mới</button><button id="bCont" class="w">Tiếp tục</button></div>
+ <p class="muted" style="font-size:13px">Tình huống lấy từ thư viện mẫu có sẵn trong game (chưa kết nối AI). Mọi ngân hàng, thương hiệu và nhân vật đều hư cấu.</p>
+</div></div>
+<div id="toast"></div><div id="sum" class="overlay" style="display:none"></div><div id="chat" class="cw"><div class="ch"><span id="cav"></span><b id="cnm"></b><span style="flex:1"></span><button class="w" id="cbl">Chặn</button><button class="w" id="cx" aria-label="Đóng">×</button></div><div class="ctl" id="ctl"></div><div class="cm" id="cmsg"></div><div class="ci"><input id="cin" maxlength="160" autocomplete="off" placeholder="Tự gõ tin nhắn trả lời…"><button class="g" id="csd">Gửi</button></div></div>
+<script>
+const K='cdsl_v1',$=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('vi-VN')+'đ',pick=a=>a[Math.floor(Math.random()*a.length)];
+const rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const ITEMS={tra:{n:'Trà đào',cost:12000,price:25000,u:0},banh:{n:'Bánh mì',cost:8000,price:18000,u:0},nuoc:{n:'Nước suối',cost:4000,price:10000,u:0},ca:{n:'Cà phê sữa',cost:9000,price:20000,u:50000},snack:{n:'Snack khoai',cost:7000,price:15000,u:40000},sua:{n:'Sữa chua',cost:6000,price:14000,u:40000},mi:{n:'Mì ly',cost:9000,price:19000,u:60000}};
+const API='';async function ai(kind,data){if(!API)return null;try{const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),7000);const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind,data}),signal:ctl.signal});clearTimeout(t);if(!r.ok)return null;const j=await r.json();return j&&j.text}catch(e){return null}}
+const HO=['Nguyễn','Trần','Lê','Phạm','Võ','Đặng','Hoàng'],TEN=['Lan','Minh','Hùng','Thảo','Quân','Mai','Nam','Hà','Khoa','Linh','Phúc','Vy'];
+const newDs=()=>({rev:0,cogs:0,loss:0,other:0,n:0,ss:0,sn:0});
+const fresh=()=>({money:300000,day:1,time:480,pre:false,ds:newDs(),unlocked:['tra','banh','nuoc'],served:0,sum:0,cnt:0,stock:{tra:6,banh:6,nuoc:10,ca:0,snack:0,sua:0,mi:0},reviews:[],log:[],unread:0,ev:null,guided:false,mt:12,tid:0,threads:[]});
+let S=fresh(),cur=null,tab='phone',spawnT=null,running=false;
+function sprite(seed,mood,me){
+ const r=rng(seed),P=a=>a[Math.floor(r()*a.length)];
+ const sk=P(['#f6d3b3','#e9b98c','#c98f64','#9b6a47']),hc=P(['#2b1d17','#5a3a22','#b5651d','#1d1d28','#8a8a99']),tc=me?'#ffcf5c':P(['#ff6f61','#5fd3a6','#7cc4ff','#ffcf5c','#b69cff']),pc=P(['#34406b','#3d3d4d','#5b4636']),st=Math.floor(r()*3),gl=r()<.3,hat=r()<.2,hcol=P(['#ff6f61','#2b2140','#ffcf5c']);
+ const g=['...HHHHHH...','..HHHHHHHH..','..HSSSSSSH..','..SESSSSES..','..SSSSSSSS..','..SSSMMSSS..','....SSSS....','..TTTTTTTT..','.ATTTTTTTTA.','.ATTTTTTTTA.','..TTTTTTTT..','..PPPPPPPP..','..PPP..PPP..','..BBB..BBB..'].map(x=>x.split(''));
+ if(st==1)for(let i=3;i<6;i++){g[i][2]='H';g[i][9]='H'} if(st==2)g[2]='..HHHHHHHH..'.split('');
+ if(gl)g[3]='..GEGSSGEG..'.split('');
+ if(hat){g[0]='..CCCCCCCC..'.split('');g[1]='.CCCCCCCCCC.'.split('')}
+ if(mood=='happy')g[5]='..SSMMMMSS..'.split('');
+ if(mood=='angry'){g[2][3]='K';g[2][8]='K'}
+ const col={H:hc,S:sk,E:'#1d1d28',M:'#c0504d',T:tc,P:pc,B:'#222',A:sk,G:'#2b2140',K:'#1d1d28',C:hcol};
+ let o='<svg viewBox="0 0 12 14">';g.forEach((row,y)=>row.forEach((c,x)=>{if(c!='.')o+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${col[c]}"/>`}));return o+'</svg>'}
+$('#me').innerHTML=sprite(777,'happy',true);
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+const stars=()=>(S.sum+9)/(S.cnt+3);
+const starStr=n=>'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n));
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem(K));if(d&&typeof d.money=='number'&&d.stock&&Array.isArray(d.reviews)&&Array.isArray(d.log)){const f=fresh(),st=Object.assign({},f.stock,d.stock),o=Object.assign(f,d);o.stock=st;o.ds=Object.assign(newDs(),d.ds);if(!Array.isArray(o.unlocked))o.unlocked=['tra','banh','nuoc'];return o}}catch(e){}return null}
+function hud(){$('#hud').innerHTML=`<b>Tạp hóa nhỏ</b><span class="chip">Ngày ${S.day} · <b id="clk">${clk()}</b></span><span class="chip">Tiền: <b>${fmt(S.money)}</b></span><span class="chip"><span class="st" style="color:#ffcf5c">${starStr(stars())}</span> ${stars().toFixed(1)} (${S.cnt})</span><span class="sp"></span>${S.pre?'<button class="g" id="bOpen">Mở cửa</button>':''}<button class="w" id="bReset">Chơi lại</button>`;$('#bReset').onclick=()=>{if(confirm('Xóa tiến trình và bắt đầu lại?')){localStorage.removeItem(K);location.reload()}};const bo=$('#bOpen');if(bo)bo.onclick=()=>{S.pre=false;running=true;hud();save();spawnT=setTimeout(spawn,800)}}
+const clk=()=>{const m=Math.floor(S.time);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+function money(d){S.money=Math.max(0,S.money+d)}
+function earn(c){const p=total(c);money(p);S.ds.rev+=p;S.ds.cogs+=costOf(c)}
+function addLog(t,tag){S.log.unshift({d:S.day,t,tag});S.log=S.log.slice(0,40)}
+const REV={ok:['Phục vụ nhanh, thanh toán rõ ràng. Sẽ quay lại!','Shop dễ thương, tính tiền chính xác.'],slow:['Chờ hơi lâu mới được tính tiền. Hàng ổn nhưng cần nhanh hơn.','Mình phải đợi khá lâu ở quầy.'],waited:['Ban đầu có chậm vì chờ xác nhận chuyển khoản, nhưng shop giải thích rõ ràng và chuyên nghiệp.','Phải chờ ngân hàng báo tiền, chủ shop xử lý bình tĩnh nên mình thấy ổn.'],accused:['Tôi đã chuyển khoản thật mà bị nghi ngờ. Trải nghiệm không tốt.','Bị báo giao dịch đáng ngờ dù tôi thanh toán đàng hoàng. Rất khó chịu.'],fake:['Hàng dở, thái độ tệ, đừng mua.','Không nên ghé shop này.']};
+function review(c,n,tag,fake){const r={name:c.name,n,text:pick(REV[tag]),d:S.day,fake:!!fake,mark:fake?'Chưa từng mua hàng':'Đã mua hàng'};S.reviews.unshift(r);S.reviews=S.reviews.slice(0,30);S.sum+=n;S.cnt++;S.ds.ss+=n;S.ds.sn++;ai('review',{stars:n,tag,hot:c.temper=='hot'}).then(t=>{if(typeof t=='string'&&t.length>5&&t.length<220){r.text=t;save();renderPanel()}})}
+function waitStars(c,waited){const q=c.pat/c.max;let n=q>.5?5:q>.25?4:3;if(waited)n=Math.min(n,4);if(c.temper=='hot'&&n<5)n--;return{n:Math.max(1,n),tag:waited?'waited':q<=.25?'slow':'ok'}}
+function total(c){return Object.entries(c.order).reduce((a,[k,q])=>a+ITEMS[k].price*q,0)}
+function costOf(c){return Object.entries(c.order).reduce((a,[k,q])=>a+ITEMS[k].cost*q,0)}
+function takeStock(c){Object.entries(c.order).forEach(([k,q])=>S.stock[k]=Math.max(0,S.stock[k]-q))}
+function spawn(){if(cur||!running)return;if(S.time>=1200)return endDay();const av=Object.keys(ITEMS).filter(k=>S.unlocked.includes(k)&&S.stock[k]>0);const seed=Math.floor(Math.random()*1e9),r=rng(seed);
+ const c={seed,name:pick(HO)+' '+pick(TEN),temper:r()<.25?'hot':'calm',pat:0,max:0,cart:{},order:{},phase:'order',mood:'n',chg:[],checked:false,settled:false};
+ if(!av.length){c.phase='out';cur=c;addLog('Khách ghé nhưng đã hết hàng. Hãy nhập thêm hàng ở tab Menu.');view();return}
+ c.max=c.pat=c.temper=='hot'?45:70;const ks=av.sort(()=>r()-.5).slice(0,1+Math.floor(r()*2));ks.forEach(k=>c.order[k]=Math.min(S.stock[k],1+Math.floor(r()*2)));
+ const t=total(c);
+ if(r()<.4){c.pay='cash';const b=[20000,50000,100000,200000].find(x=>x>=t)||200000;c.given=r()<.15?t-5000:b}
+ else{c.pay='tx';const x=r();c.truth=x<.55?'real':x<.75?'pending':'fake';c.txid='GD'+Math.floor(1e7+r()*9e7);c.time=clk();c.bAcc='0707000429';c.bName='Tạp Hóa';c.bAmt=total(c);if(c.truth=='fake'){const v=Math.floor(r()*3);if(v==0)c.bAcc='0707000492';if(v==1)c.bAmt=Math.max(1000,total(c)-10000)}}
+ cur=c;view()}
+function next(){cur=null;view();clearTimeout(spawnT);spawnT=setTimeout(spawn,Math.max(2500,Math.min(7000,4500-(stars()-3)*800)))}
+function finish(c,html,mood){c.settled=true;c.phase='res';c.mood=mood;c.res=html;S.served++;let extra='';
+ S.ds.n++;
+ c.res+=extra;save();hud();view();renderPanel()}
+function lesson(t){return`<div class="lesson"><b>Bài học:</b> ${t}</div>`}
+function settleCash(c){if(c.settled)return;takeStock(c);earn(c);const w=waitStars(c,false);review(c,w.n,w.tag);addLog(`Bán tiền mặt ${fmt(total(c))} cho ${c.name}. Thối đúng tiền.`);
+ finish(c,`<p>Giao dịch tiền mặt hoàn tất: <b>+${fmt(total(c))}</b>. Khách để lại ${w.n} sao.</p>`+lesson('Tiền mặt vẫn cần kiểm tra: đếm tiền khách đưa, thối đúng, rồi mới giao hàng.'),'happy')}
+function settleTx(c,act,auto){if(c.settled)return;const t=c.truth,P=total(c),ck=c.checked;let html='',mood='n',L='';
+ const LS='Ảnh chụp màn hình hay tin nhắn "đã chuyển" chỉ là lời khách nói. Hãy tin lịch sử trong app ngân hàng của chính bạn, đối chiếu số tiền và mã giao dịch.';
+ if(act=='confirm'){takeStock(c);
+  if(t=='fake'){money(-costOf(c));S.ds.loss+=costOf(c);html=`<p><b>Bạn đã bị lừa.</b> Hàng đã giao nhưng tiền không bao giờ về. Thiệt hại: <b>-${fmt(costOf(c))}</b>.</p>`;html+=`<p class="muted">${auto?'Hết giờ nên game tự xác nhận (luật thử thách).':ck?'Bạn đã có dấu hiệu bất thường nhưng vẫn xác nhận.':'Bạn xác nhận khi chưa có bằng chứng tiền đã vào tài khoản.'}</p>`;mood='angry';addLog(`Bị lừa hóa đơn chuyển khoản giả ${fmt(P)}.`,'bad')}
+  else{earn(c);const w=waitStars(c,false);review(c,w.n,w.tag);html=`<p>Giao dịch hợp lệ: <b>+${fmt(P)}</b>. Khách để lại ${w.n} sao.</p>`;html+=ck||t=='real'&&!ck?'':'';
+   if(!ck)html+=`<p class="muted">Lần này ổn, nhưng bạn xác nhận khi chưa kiểm tra. Đó là may mắn, chưa phải quy trình tốt.</p>`;mood='happy';addLog(`Xác nhận chuyển khoản ${fmt(P)}${ck?' sau khi kiểm tra':''}.`)}
+  L=LS}
+ else if(act=='report'){
+  if(t=='fake'){html=`<p><b>Chặn được vụ lừa.</b> Khách bỏ đi, bạn không mất hàng.</p>`;mood='n';addLog('Báo cáo giao dịch giả, không mất hàng.','good');if(Math.random()<.5){review(c,1,'fake',true);html+=`<p class="muted">Nhưng một tài khoản chưa từng mua đã để lại đánh giá 1 sao. Xem tab Đánh giá để báo cáo.</p>`}}
+  else{const n=t=='real'?1:2;review(c,n,'accused');html=`<p><b>Khách thật bị nghi oan.</b> Không có giao dịch, khách để lại ${n} sao.</p>`;html+=`<p class="muted">${ck?'Bạn đã kiểm tra, nhưng bằng chứng vẫn chưa đủ để kết luận gian lận.':'Bạn báo cáo khi chưa kiểm tra app ngân hàng.'} Báo cáo không phải đáp án an toàn tuyệt đối: nghi ngờ cũng có cái giá.</p>`;mood='angry';addLog(`Báo cáo nhầm khách ${t=='real'?'thật':'đang chờ xử lý'}.`,'bad')}
+  L='Khi chưa chắc, đừng đoán. Kiểm tra app ngân hàng, rồi chờ xác minh. Chờ có chi phí nhỏ, còn báo nhầm hoặc xác nhận nhầm tốn kém hơn.'}
+ else{c.pat=Math.max(1,c.pat-20);
+  if(t=='fake'){html=`<p><b>Khách bỏ đi khi bạn đòi chờ xác minh.</b> Bạn không mất gì.</p>`;mood='n';addLog('Chờ xác minh, khách giả bỏ đi.','good')}
+  else{takeStock(c);earn(c);const w=waitStars(c,true);review(c,w.n,w.tag);html=`<p>Tiền đã về sau khi chờ: <b>+${fmt(P)}</b>. Khách để lại ${w.n} sao, thông cảm vì bạn giải thích rõ.</p>`;mood='happy';addLog(`Chờ xác minh rồi nhận ${fmt(P)}.`,'good')}
+  L='Chờ xác minh là bước hợp lý khi dữ liệu chưa đủ. Người mua thật thường chấp nhận chờ vài phút, kẻ gian thường tìm cách thúc ép.'}
+ finish(c,html+lesson(L),mood)}
+const EV={
+ relative:{from:'Mẹ (số lạ)',txt:'Con ơi mẹ vừa đổi số. Chuyển gấp 150.000đ cho cô Hoa giúp mẹ nhé, mẹ gửi lại sau.',btn:['Chuyển tiền ngay','Gọi lại số mẹ đã lưu','Chưa chuyển, bỏ qua'],amt:-150000,
+  vf:{legit:'Mẹ nghe máy: "Ừ, mẹ đổi số thật, mẹ nhắn đấy."',scam:'Mẹ nghe máy: "Mẹ có nhắn gì đâu? Điện thoại mẹ để ở nhà."'},
+  out:{legit:{comply:[-150000,'Mẹ nhận được tiền và cảm ơn con.'],ignore:[0,'Mẹ phải nhờ người khác. Lần sau hãy gọi lại để xác minh thay vì bỏ qua.']},scam:{comply:[-150000,'Tiền đã chuyển cho kẻ giả danh và khó lấy lại.'],ignore:[0,'Bạn tránh được vụ lừa. Hãy báo mẹ biết có người giả danh.']}},
+  les:'Tên hiển thị hay số tài khoản khớp không chứng minh người nhắn là người thân. Hãy gọi lại bằng số đã lưu, qua một kênh độc lập.'},
+ prize:{from:'Tin nhắn lạ',txt:null,btn:['Bấm link, làm theo','Kiểm tra tên miền của link','Bỏ qua và chặn'],
+  txts:{legit:'Cảm ơn bạn là khách thân thiết của Chợ Mới. Nhận voucher 30.000đ tại link: chomoi.vn/uudai',scam:'Bạn đã trúng điện thoại! Đóng phí vận chuyển 50.000đ để nhận quà: chomoi-uudai.top/nhan'},
+  vf:{legit:'Tên miền chomoi.vn khớp trang chính thức bạn đã lưu. Trang không yêu cầu phí hay OTP.',scam:'Tên miền chomoi-uudai.top giống tên thương hiệu nhưng không phải trang chính thức. Trang yêu cầu đóng phí.'},
+  out:{legit:{comply:[30000,'Bạn nhận voucher thật, quy đổi +30.000đ.'],ignore:[0,'Bạn bỏ lỡ một ưu đãi thật. Kiểm tra trước rồi quyết định sẽ tốt hơn.']},scam:{comply:[-50000,'Bạn đã đóng phí và nhập thông tin. Không có giải thưởng nào cả.'],ignore:[0,'Bạn tránh được bẫy trúng thưởng.']}},
+  les:'Không phải ưu đãi nào cũng giả. Hãy xem tên miền, xem có đòi phí, OTP hay mật khẩu không, và so với trang chính thức bạn tự mở.'},
+ supplier:{from:'Anh Hòa (nhà cung cấp)',txt:'Em đổi số tài khoản nhận tiền hàng tháng này. Anh chuyển 200.000đ đợt nhập mới vào TK này nhé.',btn:['Chuyển vào TK mới','Gọi hotline nhà cung cấp đã lưu','Từ chối, chờ xác nhận'],
+  vf:{legit:'Hotline xác nhận: đã đổi sang tài khoản công ty. Bạn có thể chuyển.',scam:'Hotline: "Bên em không đổi số tài khoản." Tin nhắn là giả mạo.'},
+  out:{legit:{comply:[-200000,'Nhập hàng về đủ: +8 trà đào.','stock'],ignore:[0,'Đợt nhập bị chậm. Gọi hotline xác nhận rồi chuyển sẽ nhanh hơn.']},scam:{comply:[-200000,'Tiền vào tài khoản lạ, hàng không về.'],ignore:[0,'Bạn tránh được vụ đổi tài khoản giả mạo.']}},
+  les:'Yêu cầu đổi tài khoản nhận tiền luôn cần xác minh bằng kênh đã lưu từ trước, ngay cả khi tin nhắn đến từ số quen.'}};
+function makeEv(){const kind=pick(Object.keys(EV)),truth=Math.random()<.5?'legit':'scam';S.ev={kind,truth,verified:false};S.unread=1;toast('Có tin nhắn mới trên điện thoại');renderTabs()}
+function evAct(a){const e=S.ev;if(!e)return;const d=EV[e.kind];
+ if(a=='verify'){e.verified=true;addLog('Xác minh: '+d.vf[e.truth],e.truth=='scam'?'good':'');save();renderPanel();return}
+ const o=d.out[e.truth][a];money(o[0]);S.ds.other+=o[0];if(o[2]=='stock')S.stock.tra=Math.min(20,S.stock.tra+8);
+ const bad=o[0]<0&&a=='comply'&&e.truth=='scam';addLog(`${d.from}: ${o[1]}`,bad?'bad':'');
+ S.ev=null;S.unread=0;S.lastEv={t:o[1],l:d.les,bad};save();hud();renderTabs();renderPanel();toast(o[0]?(o[0]>0?'+':'')+fmt(o[0]):'Đã xử lý tin nhắn')}
+function view(){const c=cur,d=$('#dlg'),ce=$('#cust');
+ if(!c){ce.classList.remove('in');d.innerHTML='<p class="muted">Cửa hàng đang vắng. Khách sắp ghé…</p>';return}
+ ce.innerHTML=sprite(c.seed,c.mood);requestAnimationFrame(()=>ce.classList.add('in'));
+ const items=Object.entries(c.order).map(([k,q])=>`${q} × ${ITEMS[k].n}`).join(', ');let h=`<b>${c.name}</b>${c.phase=='res'||c.phase=='out'?'':'<div class="bar pat" id="pb" title="Kiên nhẫn của khách"><i></i></div>'}`;
+ if(c.phase=='out')h+=`<div class="bub">Ôi, shop hết hàng rồi à? Mình đi quán khác nhé.</div><button data-a="nx">Tiếp tục</button>`;
+ else if(c.phase=='order'){const ct=Object.entries(c.cart).map(([k,q])=>`${q} × ${ITEMS[k].n}`).join(', ')||'(trống)',cs=Object.entries(c.cart).reduce((a,[k,q])=>a+ITEMS[k].price*q,0);h+=`<div class="bub">Chào shop! Cho mình ${items} nhé.</div><p>Giỏ hàng: <b>${ct}</b> · ${fmt(cs)}</p><div class="row">${S.unlocked.filter(k=>S.stock[k]>0).map(k=>`<button class="w" data-a="it" data-v="${k}" ${(c.cart[k]||0)>=S.stock[k]?'disabled':''}>+ ${ITEMS[k].n} · ${fmt(ITEMS[k].price)}</button>`).join('')}</div><div class="row"><button class="w" data-a="cc">Bỏ hết</button><button class="g" data-a="pay">Tính tiền</button></div>`}
+ else if(c.phase=='cash'){const t=total(c),sum=c.chg.reduce((a,b)=>a+b,0);h+=`<div class="bub">Mình trả tiền mặt nhé.</div><table class="tbl"><tr><td>Tổng</td><td><b>${fmt(t)}</b></td></tr><tr><td>Khách đưa</td><td><b>${fmt(c.given)}</b></td></tr></table>`;
+  if(c.given<t)h+=`<p class="muted">Khách đưa thiếu ${fmt(t-c.given)}.</p><button data-a="more">Xin khách bổ sung</button>`;
+  else if(c.given==t)h+=`<button class="g" data-a="chg">Nhận tiền, hoàn tất</button>`;
+  else h+=`<p>Cần thối: <b>${fmt(c.given-t)}</b>. Đã chọn: <b>${fmt(sum)}</b></p><div class="row">${[1000,2000,5000,10000,20000,50000].map(v=>`<button class="w" data-a="add" data-v="${v}">+${v/1000}k</button>`).join('')}</div><div class="row"><button class="w" data-a="clr">Xóa</button><button class="g" data-a="chg">Trả tiền thừa</button></div>`}
+ else if(c.phase=='tx'){h+=`<div class="bub">Mình chuyển khoản rồi nhé, đây là màn hình.</div><div class="txc"><b>Chuyển tiền thành công</b><br>Số tiền: ${fmt(c.bAmt)}<br>Người nhận: ${c.bName} · STK ${c.bAcc}<br>Mã: ${c.txid} · ${c.time}</div><p class="muted" style="margin:6px 0 0">Tài khoản shop: <b>0707000429</b> · Tạp Hóa · Đơn hàng: <b>${fmt(total(c))}</b></p>
+  <p style="margin:8px 0 2px">Thời gian quyết định: <b id="tl"></b></p><div class="bar" id="tb"><i></i></div>
+  ${c.checked?`<p class="lesson" id="bk">${bank(c)}</p>`:''}
+  <div class="row"><button class="g" data-a="confirm">Cho khách đi</button><button class="r" data-a="report">Từ chối, nghi giả</button><button class="w" data-a="check" ${c.checked?'disabled':''}>Kiểm tra app ngân hàng</button><button class="w" data-a="wait">Chờ xác minh</button></div>`}
+ else if(c.phase=='res')h+=c.res+`<button data-a="nx">Khách tiếp theo</button>`;
+ d.innerHTML=h}
+function bank(c){return c.truth=='real'?`App ngân hàng: đã ghi có +${fmt(total(c))}, mã ${c.txid} khớp.`:c.truth=='pending'?'App ngân hàng: chưa ghi có, có 1 giao dịch đang chờ xử lý.':'App ngân hàng: chưa thấy giao dịch nào khớp mã hoặc số tiền.'}
+$('#dlg').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||!cur)return;const c=cur,a=b.dataset.a;
+ if(a=='nx')return next();
+ if(a=='it'){c.cart[b.dataset.v]=(c.cart[b.dataset.v]||0)+1;return view()}
+ if(a=='cc'){c.cart={};return view()}
+ if(a=='pay'){const ok=Object.keys(c.order).length==Object.keys(c.cart).length&&Object.entries(c.order).every(([k,q])=>c.cart[k]==q);if(!ok){c.cart={};c.pat-=6;toast('Sai món rồi, khách nhắc lại. Khách mất kiên nhẫn.');return view()}c.phase=c.pay=='cash'?'cash':'tx';if(c.pay=='tx')c.deadline=Date.now()+(S.guided?25000:10000),c.total=S.guided?25000:10000;return view()}
+ if(a=='more'){c.given=[20000,50000,100000,200000].find(x=>x>=total(c))||200000;c.pat-=5;return view()}
+ if(a=='add'){c.chg.push(+b.dataset.v);return view()}
+ if(a=='clr'){c.chg=[];return view()}
+ if(a=='chg'){const need=c.given-total(c),sum=c.chg.reduce((x,y)=>x+y,0);if(sum!=need)return toast('Tiền thừa chưa đúng, cần '+fmt(need));return settleCash(c)}
+ if(c.phase!='tx'||c.settled)return;
+ if(a=='check'){c.checked=true;c.pat-=8;return view()}
+ settleTx(c,a)});
+let openT=null;const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SCL={verify:['Không có thời gian giải thích đâu, gấp lắm! Làm đi rồi mình nói sau.','Bạn cứ làm theo hướng dẫn đi, hỏi nhiều mất thời gian lắm.'],refuse:['Bạn sẽ hối hận đấy, cơ hội không quay lại đâu.','Thôi vậy, bạn tự chịu.'],stall:['Nhanh lên nhé, chỉ còn vài phút thôi!','Sao chưa làm? Người khác làm xong hết rồi.'],pay:['Nhận rồi, cảm ơn bạn nhé.']};
+const LGL={verify:['Được chứ, bạn cứ kiểm tra thoải mái, mình chờ.','Bạn gọi lại hoặc kiểm tra thêm cũng được, không vội.'],refuse:['Không sao, mình hiểu. Cảm ơn bạn đã phản hồi.'],stall:['Bạn cứ từ từ nhé.'],pay:['Cảm ơn bạn nhé!']};
+const TH={
+ relative:{amt:150000,op:{any:[['Mẹ (số lạ)','Con ơi, mẹ đây. Mẹ đổi số rồi. Chuyển gấp {a} cho cô Hoa giúp mẹ nhé, mẹ gửi lại sau.'],['Anh Tuấn (nick mới)','Em ơi anh Tuấn nè, anh mất nick cũ. Cho anh mượn {a} gấp, tối anh trả.']]},vb:'Gọi số đã lưu',ev:{legit:'Bạn gọi số đã lưu: đúng người đó nghe máy và xác nhận có nhắn tin.',scam:'Bạn gọi số đã lưu: người thân nói không hề nhắn, tài khoản đã bị chiếm.'},lg:[-150000,0],les:'Tên hiển thị hay số tài khoản khớp chưa chứng minh người nhắn là người thân. Hãy gọi lại bằng số đã lưu hoặc hỏi điều chỉ hai người biết.'},
+ bank:{sc:1,amt:100000,op:{any:[['Ngân hàng Phương Đông','Tài khoản của bạn sắp bị khóa vì giao dịch bất thường. Gửi mã OTP vừa nhận để hủy khóa trong 10 phút.']]},vb:'Gọi hotline in trên thẻ',ev:{scam:'Hotline chính thức: ngân hàng không bao giờ hỏi mã OTP qua tin nhắn hay điện thoại.'},lg:[0,0],les:'Không ai chính danh cần bạn đọc OTP. Hãy tự gọi hotline in trên thẻ, đừng gọi số trong tin nhắn.'},
+ delivery:{amt:80000,op:{scam:[['Giao Hàng Nhanh Việt','Đơn hàng của bạn bị giữ do thiếu phí lưu kho 25.000đ. Thanh toán tại ghn-viet.top/phi để nhận hàng.']],legit:[['Giao Hàng Nhanh Việt','Chào shop, mình là shipper, đang giao kiện hàng bạn đặt tuần trước (mã GH2291). Thu COD 60.000đ khi nhận nhé.']]},vb:'Kiểm tra mã đơn và link',ev:{legit:'Mã đơn GH2291 khớp đơn bạn đã đặt, thu COD tận nơi, không yêu cầu link.',scam:'Bạn không có đơn nào mã này. Tên miền ghn-viet.top không phải trang chính thức.'},lg:[-60000,5],les:'Đơn vị vận chuyển thật không bắt đóng phí qua link lạ. Đối chiếu mã đơn với đơn bạn thật sự đã đặt.'},
+ prize:{amt:50000,op:{scam:[['Chương trình may mắn','Chúc mừng! Bạn trúng điện thoại. Đóng phí vận chuyển 50.000đ tại chomoi-uudai.top/nhan.']],legit:[['Chợ Mới - CSKH','Cảm ơn bạn là khách thân thiết của Chợ Mới. Nhận voucher 30.000đ tại chomoi.vn/uudai, không mất phí.']]},vb:'Kiểm tra tên miền',ev:{legit:'Tên miền chomoi.vn khớp trang chính thức đã lưu, không đòi phí hay OTP.',scam:'Tên miền chomoi-uudai.top giống thương hiệu nhưng không phải trang chính thức, và đòi đóng phí.'},lg:[30000,0],les:'Không phải ưu đãi nào cũng giả. Xem tên miền, xem có đòi phí hoặc OTP không, và so với trang chính thức bạn tự mở.'},
+ supplier:{amt:200000,op:{any:[['Anh Hòa (nhà cung cấp)','Em đổi số tài khoản nhận tiền hàng. Anh chuyển 200.000đ đợt nhập mới vào TK mới nhé.']]},vb:'Gọi hotline đã lưu',ev:{legit:'Hotline đã lưu xác nhận: bên họ đã đổi sang tài khoản công ty.',scam:'Hotline đã lưu: bên họ không đổi số tài khoản, tin nhắn là giả mạo.'},lg:[-200000,8],les:'Yêu cầu đổi tài khoản nhận tiền luôn cần xác minh bằng kênh đã lưu từ trước.'},
+ invest:{sc:1,amt:100000,op:{any:[['Cô Thủy (nhóm đầu tư)','Nhóm mình đầu tư lãi 30% mỗi ngày. Nạp thử 100.000đ là rút được 130.000đ ngay, chuyển vào STK này nha.']]},vb:'Tra cứu nhóm đầu tư',ev:{scam:'Không có đơn vị nào được cấp phép. Lãi 30%/ngày là dấu hiệu lừa đảo điển hình.'},lg:[0,0],les:'Lãi cao bất thường và nạp thử rút ngay là mồi nhử. Đầu tư thật không ép chuyển vào tài khoản cá nhân.'},
+ job:{sc:1,amt:100000,op:{any:[['Tuyển dụng Online 24h','Tuyển cộng tác viên làm tại nhà, lương 500k/ngày. Đặt cọc đồng phục 100.000đ để nhận việc.']]},vb:'Tra cứu công ty',ev:{scam:'Không tìm thấy công ty nào đăng ký tên này. Việc nhẹ lương cao mà đòi đặt cọc là dấu hiệu lừa đảo.'},lg:[0,0],les:'Tuyển dụng thật không thu tiền đặt cọc trước khi nhận việc.'}};
+TH.relative.op={legit:[['Mẹ (số lạ)','Con ơi, mẹ đây. Mẹ đổi số rồi. Chuyển gấp {a} cho cô Hoa giúp mẹ nhé, mẹ gửi lại sau.'],['Anh Tuấn (nick mới)','Em ơi anh Tuấn nè, anh mất nick cũ. Cho anh mượn {a} gấp, tối anh trả.'],['Dì Ba (số mới)','Dì Ba đây con. Dì đổi số mới rồi, cho dì mượn {a} đóng tiền thuốc, tuần sau dì gửi lại.']],hacked:[['Mẹ','Con ơi chuyển gấp {a} vào STK này giúp mẹ, mẹ đang họp nên đừng gọi nhé.'],['Anh Tuấn','Em chuyển giúp anh {a} vào TK này nha, anh đang kẹt, đừng gọi, tí anh giải thích.'],['Chị Hạnh','Em ơi cho chị mượn {a}, em gửi vào STK này giúp chị, chị đang bận lắm.']],impostor:[['Số lạ (tự nhận chú Hải)','Cháu ơi, chú Hải bạn của bố cháu đây. Chú đổi số rồi. Cháu chuyển giúp chú {a}, mai chú gửi lại.'],['Số lạ (tự nhận cô Lan)','Cô Lan hàng xóm cũ đây cháu. Cho cô mượn {a} gấp, cô gửi lại ngay.'],['Số lạ','Đoán xem ai đây? Bạn thân hồi cấp 3 nè, chuyển giúp mình {a} nhé, mai mình trả.']]};
+TH.relative.tools=[['Gọi số đã lưu',{legit:'Người thân nghe máy: ừ, mình mới đổi số, mình nhắn đấy.',hacked:'Người thân nghe máy: mình có nhắn gì đâu, tài khoản bị hack rồi!',impostor:'Bạn không lưu số của người này nên không có số để gọi lại.'}],['Gọi thẳng số vừa nhắn',{legit:'Máy bận, không ai nghe.',hacked:'Có người nghe, giọng lạ, nói đang họp rồi cúp máy.',impostor:'Cuộc gọi bị từ chối rồi tắt máy.'}],['Hỏi người thân khác',{legit:'Chị Hạnh: ừ, nghe nói người đó vừa đổi số.',hacked:'Chị Hạnh: người đó vừa nói với chị là không hề nhắn cho em.',impostor:'Chị Hạnh: nhà mình không có ai tên như vậy, coi chừng lừa.'}],['Xem lịch sử trò chuyện',{legit:'Đây là số mới nên chưa có lịch sử trò chuyện.',hacked:'Lịch sử cũ vẫn còn nhưng cách xưng hô lần này khác thường.',impostor:'Không có lịch sử trò chuyện nào với số này.'}],['Đối chiếu danh bạ',{legit:'Số này chưa có trong danh bạ.',hacked:'Tên trùng với người đã lưu trong danh bạ.',impostor:'Không có ai trong danh bạ khớp tên người này.'}],['Tra chủ tài khoản nhận tiền',{legit:'Chủ tài khoản trùng tên với người thân.',hacked:'Chủ tài khoản là người lạ, tên hoàn toàn khác.',impostor:'Chủ tài khoản là người lạ, mới mở cách đây 2 ngày.'}]];
+TH.bank.tools=[['Gọi hotline in trên thẻ',{scam:'Hotline: ngân hàng không bao giờ hỏi mã OTP.'}],['Mở app ngân hàng',{scam:'Tài khoản hoạt động bình thường, không có cảnh báo khóa.'}],['Tra đầu số gửi tin',{scam:'Không tìm thấy thông tin về đầu số này.'}],['Tra tên ngân hàng',{scam:'Có ngân hàng tên gần giống, nhưng không trùng khớp tên này.'}],['Tìm cảnh báo trên mạng',{scam:'Có nhiều bài cảnh báo kiểu tin nhắn khóa tài khoản đòi OTP.'}]];
+TH.delivery.tools=[['Kiểm tra mã đơn',{legit:'Mã GH2291 khớp đơn bạn đã đặt.',scam:'Không có đơn nào đang chờ phí lưu kho.'}],['Kiểm tra link',{legit:'Tin nhắn không chứa link nào.',scam:'Tên miền ghn-viet.top mới đăng ký 3 ngày trước.'}],['Gọi tổng đài hãng',{legit:'Tổng đài: có kiện đang giao đến cửa hàng bạn, thu COD.',scam:'Tổng đài: không có kiện nào giữ phí lưu kho cho bạn.'}],['Hỏi bưu cục gần đây',{legit:'Bưu cục bận, không trả lời được.',scam:'Bưu cục: hãng không thu phí qua link.'}]];
+TH.prize.tools=[['Kiểm tra tên miền',{legit:'chomoi.vn trùng khớp trang chính thức.',scam:'chomoi-uudai.top không phải trang chính thức.'}],['Xem trang chính thức',{legit:'Trang chính thức có chương trình tặng voucher khách thân thiết.',scam:'Trang chính thức không có chương trình trúng điện thoại.'}],['Tra đầu số gửi tin',{legit:'Không có thông tin về đầu số này.',scam:'Đầu số bị nhiều người báo cáo spam.'}],['Hỏi khách quen',{legit:'Một khách quen cũng nhận tin tương tự và dùng ổn.',scam:'Không ai quanh bạn nhận được chương trình này.'}],['Tìm cảnh báo trên mạng',{legit:'Không thấy cảnh báo nào về chương trình.',scam:'Có nhiều bài cảnh báo phí vận chuyển nhận quà là lừa đảo.'}]];
+TH.supplier.tools=[['Gọi hotline đã lưu',{legit:'Hotline xác nhận: đã đổi sang tài khoản công ty.',scam:'Hotline: không đổi số tài khoản.'}],['Đối chiếu hóa đơn cũ',{legit:'Hóa đơn cũ ghi tài khoản khác, nhưng có thông báo đổi kèm dấu công ty.',scam:'Hóa đơn cũ ghi tài khoản khác và không có thông báo đổi nào.'}],['Tra chủ tài khoản mới',{legit:'Chủ tài khoản là công ty, khớp tên trên hợp đồng.',scam:'Chủ tài khoản là cá nhân không liên quan.'}],['Hỏi người quen cùng ngành',{legit:'Không ai biết thông tin này.',scam:'Hai chủ shop khác cũng nhận tin đổi tài khoản và nghi lừa đảo.'}],['Xem số nhắn tin',{legit:'Số nhắn trùng số đã lưu của nhà cung cấp.',scam:'Số nhắn khác số đã lưu dù tên hiển thị giống nhau.'}]];
+TH.invest.tools=[['Tra cứu công ty',{scam:'Không tìm thấy công ty nào đăng ký tên này.'}],['Tra giấy phép',{scam:'Không có thông tin về giấy phép hoạt động.'}],['Hỏi người từng tham gia',{scam:'Một người nói đã rút được 130.000đ lần đầu, rồi bị đòi nạp thêm.'}],['Tìm cảnh báo trên mạng',{scam:'Có nhiều bài cảnh báo mô hình nạp thử rút ngay.'}],['Tra chủ tài khoản nhận tiền',{scam:'Chủ tài khoản là cá nhân, không phải tổ chức đầu tư.'}]];
+TH.job.tools=[['Tra cứu công ty',{scam:'Có công ty tên gần giống, nhưng địa chỉ và mã số thuế không khớp.'}],['Xem website tuyển dụng',{scam:'Không thấy tin tuyển dụng này trên website chính thức.'}],['Hỏi người từng ứng tuyển',{scam:'Có người nói làm được vài ngày rồi bị mất tiền cọc.'}],['Tìm cảnh báo trên mạng',{scam:'Không có thông tin cụ thể về công ty này.'}],['Tra chủ tài khoản nhận tiền',{scam:'Chủ tài khoản là cá nhân.'}]];
+const unr=()=>{S.unread=S.threads.filter(t=>t.un&&!t.end).length};
+function newThread(){if(S.threads.filter(t=>!t.end).length>=3)return;const kind=pick([...Object.keys(TH),'relative','relative']),k=TH[kind],truth=k.sc?'scam':Math.random()<.6?'scam':'legit',sub=truth=='scam'&&kind=='relative'?pick(['hacked','impostor']):null,[nm,tx]=pick(k.op[sub||truth]||k.op[truth]||k.op.any),th={id:++S.tid,kind,truth,sub,name:nm,seed:Math.floor(Math.random()*1e9),msgs:[{f:'t',t:tx.replace('{a}',fmt(k.amt))}],end:null,pr:0,vf:false,used:[],un:true};S.threads.unshift(th);S.threads=S.threads.slice(0,20);unr();toast('Tin nhắn mới từ '+nm);if(openT==null)openThread(th.id);else{renderTabs();renderPanel()}save()}
+function thList(){const ct='<div class="rv"><b>Danh bạ</b><br><span class="muted">Mẹ · Anh Tuấn · Dì Ba · Chị Hạnh · Anh Hòa (nhà cung cấp) · Giao Hàng Nhanh (hãng)</span></div>';return ct+(S.threads.length?'<p class="muted">Chạm vào cuộc trò chuyện để nhắn tin.</p>'+S.threads.map(t=>`<div class="rv" data-th="${t.id}" style="cursor:pointer"><b>${esc(t.name)}</b>${t.un&&!t.end?'<span class="dot"></span>':''}<br><span class="muted">${esc(t.msgs[t.msgs.length-1].t.slice(0,60))}${t.end?' · đã xử lý':''}</span></div>`).join(''):'<p class="muted">Chưa có tin nhắn. Điện thoại sẽ báo khi có người nhắn.</p>')}
+function openThread(id){const th=S.threads.find(t=>t.id==id);if(!th)return;openT=id;th.un=false;unr();$('#chat').style.display='flex';renderChat();renderTabs();renderPanel();if(!th.end)$('#cin').focus()}
+function renderChat(){const th=S.threads.find(t=>t.id==openT);if(!th)return;$('#cav').innerHTML=sprite(th.seed,'n');$('#cnm').textContent=th.name;$('#ctl').innerHTML=TH[th.kind].tools.map((t,i)=>`<button class="w" data-tl="${i}" ${th.end||(th.used||[]).includes(i)?'disabled':''}>${t[0]}</button>`).join('');['#cbl','#cin','#csd'].forEach(s=>$(s).disabled=!!th.end);const m=$('#cmsg');m.innerHTML=th.msgs.map(x=>`<div class="mb ${x.f=='m'?'m':x.f=='s'?'s':''}">${esc(x.t)}</div>`).join('')+(th.typing?'<div class="mb">…</div>':'');m.scrollTop=m.scrollHeight}
+function classify(s,th){const n=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase(),neg=/khong|\bko\b|chua|dung |tu choi|thoi|chan|lua dao|cong an|bao cao|nghi ngo|bo di|de sau/.test(n);
+ if(th.kind=='bank'&&!neg&&/\b\d{4,8}\b/.test(n))return'otp';
+ if(/goi lai|goi dien|goi cho|xac minh|xac nhan|hotline|cau hoi|ban la ai|co phai|so cu|so da luu|kiem tra|video|giay to|chinh chu|chung minh/.test(n))return'verify';
+ if(neg)return'refuse';
+ if(/chuyen|gui tien|\bck\b|\bok\b|dong y|duoc|vang|nhan|thanh toan|dong phi|nop|chap nhan|lam ngay/.test(n))return'pay';return'chat'}
+function react(th,it){const k=TH[th.kind],sc=th.truth=='scam',L=sc?SCL:LGL;let d=0,end=null,txt;
+ if(it=='otp'){d=-k.amt;end='lost';txt='Cảm ơn, đang xử lý...'}
+ else if(it=='refuse'){end='refused';txt=pick(L.refuse)}
+ else if(it=='verify'){th.pr++;txt=pick(L.verify)}
+ else if(it=='pay'&&th.kind!='bank'){if(sc){d=-k.amt;end='lost'}else{d=k.lg[0];end='ok';if(k.lg[1])S.stock.tra=Math.min(20,S.stock.tra+k.lg[1])}txt=pick(L.pay)}
+ else{th.pr++;txt=pick(L.stall);if(sc&&th.pr>=5){end='gone';txt='Thôi, bạn không có thiện chí, mình đi tìm người khác.'}}
+ return{txt,end,d}}
+function conclude(th,end,d){th.end=end;const k=TH[th.kind],sc=th.truth=='scam';if(d){money(d);S.ds.other+=d}let v;
+ if(end=='lost')v=`Bạn đã mất ${fmt(-d)}. ${th.vf?'Bạn đã có bằng chứng nhưng vẫn làm theo.':'Bạn chưa xác minh bằng kênh độc lập.'}`;
+ else if(end=='gone')v='Kẻ gian bỏ đi vì bạn giữ bình tĩnh và hỏi lại. Không mất gì.';
+ else if(end=='ok')v=(d>0?`Nhận +${fmt(d)}. `:d<0?`Đã trả ${fmt(-d)}. `:'')+(th.vf?'Bạn xác minh rồi mới đồng ý: quy trình tốt.':'Lần này là người thật nên ổn, nhưng bạn đồng ý khi chưa xác minh. Đó là may mắn.');
+ else v=sc?(th.vf?'Bạn từ chối sau khi xác minh: chuẩn.':'Từ chối đúng. Tin nhắn này là lừa đảo.'):`Đây là giao dịch thật và bạn đã từ chối${th.vf?'':' khi chưa xác minh'}. An toàn, nhưng bỏ lỡ cơ hội.`;
+ th.msgs.push({f:'s',t:v+' '+(th.sub=='hacked'?'Tài khoản người thân thật vẫn có thể bị chiếm: tên và ảnh đúng chưa đủ. ':th.sub=='impostor'?'Người lạ có thể tự nhận là người quen để vay tiền. ':'')+k.les});addLog(`${th.name}: ${v}`,end=='lost'?'bad':sc?'good':'');hud();save()}
+async function send(){const th=S.threads.find(t=>t.id==openT),i=$('#cin'),s=i.value.trim().slice(0,160);if(!th||th.end||th.busy||!s)return;i.value='';th.msgs.push({f:'m',t:s});th.busy=1;th.typing=1;renderChat();const it=classify(s,th),r=react(th,it);let t=r.txt;
+ const [a]=await Promise.all([r.end?null:ai('npc',{kind:th.kind,sub:th.sub,sc:th.truth=='scam',it,pr:th.pr,h:th.msgs.slice(-4).map(m=>(m.f=='m'?'Người chơi: ':'NPC: ')+m.t.slice(0,120))}),new Promise(z=>setTimeout(z,700))]);
+ if(typeof a=='string'&&a.length>3&&a.length<220)t=a;th.typing=0;th.busy=0;th.msgs.push({f:'t',t});if(r.end)conclude(th,r.end,r.d);save();renderChat();renderPanel()}
+$('#csd').onclick=send;$('#cin').onkeydown=e=>{if(e.key=='Enter')send()};$('#cx').onclick=()=>{openT=null;$('#chat').style.display='none';renderPanel()};
+$('#ctl').onclick=e=>{const b=e.target.closest('[data-tl]'),th=S.threads.find(t=>t.id==openT);if(!b||!th||th.end)return;const i=+b.dataset.tl,T=TH[th.kind].tools[i];th.used=th.used||[];if(th.used.includes(i))return;th.used.push(i);th.vf=true;const r=T[1][th.sub||th.truth];th.msgs.push({f:'s',t:T[0]+': '+r});addLog(th.name+' · '+T[0]+': '+r);save();renderChat()};
+$('#cbl').onclick=()=>{const th=S.threads.find(t=>t.id==openT);if(th&&!th.end){conclude(th,'blocked',0);renderChat();renderPanel()}};
+function shade(){const h=S.time/60,a=h<16?0:Math.min(.4,(h-16)/4*.4),e=$('#shade');if(e)e.style.background=a?`rgba(40,25,100,${a})`:'transparent'}
+function tick(){if(!running)return;S.time+=0.2;S.mt-=0.1;if(S.mt<=0){S.mt=20+Math.random()*15;newThread()}const k=$('#clk');if(k)k.textContent=clk();shade();const c=cur;if(c&&!c.settled&&['order','cash','tx'].includes(c.phase)){c.pat-=0.1;const b=$('#pb');if(b){b.firstChild.style.width=Math.max(0,c.pat/c.max*100)+'%';b.classList.toggle('lo',c.pat/c.max<.3)}if(c.pat<=0)leave(c)}}
+function leave(c){if(c.settled)return;review(c,1,'slow');addLog(`${c.name} hết kiên nhẫn và bỏ đi.`,'bad');finish(c,'<p><b>Khách hết kiên nhẫn và bỏ đi.</b> Không có giao dịch, khách để lại 1 sao.</p>'+lesson('Kiểm tra là cần thiết, nhưng khách thật không chờ mãi được. Hãy kiểm tra có chọn lọc: đối chiếu số tài khoản và số tiền trên bill, rồi mở app ngân hàng một lần.'),'angry')}
+function endDay(){running=false;clearTimeout(spawnT);cur=null;view();const d=S.ds,rent=30000;money(-rent);const profit=d.rev-d.cogs-d.loss+d.other-rent,avg=d.sn?(d.ss/d.sn).toFixed(1):'–',m=x=>(x<0?'-':'')+fmt(Math.abs(x));
+ $('#sum').style.display='flex';$('#sum').innerHTML=`<div class="box"><h1>Tổng kết ngày ${S.day}</h1><table class="sum"><tr><td>Số khách</td><td><b>${d.n}</b></td></tr><tr><td>Doanh thu</td><td><b>${fmt(d.rev)}</b></td></tr><tr><td>Vốn hàng đã bán</td><td>-${fmt(d.cogs)}</td></tr><tr><td>Thiệt hại do bị lừa</td><td>-${fmt(d.loss)}</td></tr><tr><td>Tin nhắn và sự kiện</td><td>${m(d.other)}</td></tr><tr><td>Tiền thuê mặt bằng</td><td>-${fmt(rent)}</td></tr><tr><td><b>Lợi nhuận</b></td><td><b style="color:${profit>=0?'var(--mint)':'var(--coral)'}">${m(profit)}</b></td></tr><tr><td>Đánh giá trong ngày</td><td>${avg} ★ · điểm cửa hàng ${stars().toFixed(1)}</td></tr><tr><td>Tiền hiện có</td><td><b>${fmt(S.money)}</b></td></tr></table><p class="muted">Sang ngày mới, bạn có thể nhập hàng hoặc mở bán món mới ở tab Menu trước khi bấm Mở cửa.</p><div class="row"><button class="g" id="bNext">Sang ngày mới</button></div></div>`;
+ hud();save();$('#bNext').onclick=()=>{S.day++;S.time=480;S.ds=newDs();S.pre=true;$('#sum').style.display='none';tab='stock';save();hud();renderTabs();renderPanel();view();toast('Nhập hàng xong thì bấm Mở cửa')}}
+setInterval(()=>{tick();const c=cur;if(!c||c.phase!='tx'||c.settled)return;const left=c.deadline-Date.now();
+ if(left<=0)return settleTx(c,'confirm',true);const b=$('#tb'),l=$('#tl');if(!b)return;b.firstChild.style.width=(left/c.total*100)+'%';b.classList.toggle('lo',left<4000);l.textContent=Math.ceil(left/1000)+' giây'},100);
+function renderTabs(){const T=[['phone','Điện thoại'],['stock','Menu'],['rev','Đánh giá'],['log','Nhật ký']];$('#tabs').innerHTML=T.map(([k,n])=>`<button class="${tab==k?'on':''}" data-t="${k}">${n}${k=='phone'&&S.unread?'<span class="dot"></span>':''}</button>`).join('')}
+$('#tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){tab=b.dataset.t;if(tab=='phone')S.unread=0;renderTabs();renderPanel()}};
+function renderPanel(){const p=$('#panel');let h='';if(tab=='phone'){p.innerHTML=thList();return}
+ if(tab=='phone'){const e=S.ev;if(e){const d=EV[e.kind],t=d.txt||d.txts[e.truth];h=`<div class="ev"><b>${d.from}</b><br>${t}</div>${e.verified?`<div class="lesson">${d.vf[e.truth]}</div>`:''}<div class="row"><button class="r" data-e="comply">${d.btn[0]}</button>${e.verified?'':`<button class="g" data-e="verify">${d.btn[1]}</button>`}<button class="w" data-e="ignore">${d.btn[2]}</button></div>`}
+  else h='<p class="muted">Chưa có tin nhắn mới.</p>'+(S.lastEv?`<div class="ev"><b>Tin gần nhất:</b> ${S.lastEv.t}</div>${lesson(S.lastEv.l)}`:'')}
+ else if(tab=='stock'){h='<p class="muted">Nhà cung cấp: Chợ Đầu Mối An Phát. Mở bán món mới tốn phí kệ hàng, đã gồm 5 sản phẩm đầu.</p><table class="tbl">'+Object.entries(ITEMS).map(([k,i])=>S.unlocked.includes(k)?`<tr><td>${i.n}<br><span class="muted">nhập ${fmt(i.cost)} · bán ${fmt(i.price)} · lãi ${fmt(i.price-i.cost)}</span></td><td>Kho: <b>${S.stock[k]}</b></td><td><button class="w" data-r="${k}" ${S.money<i.cost*5||S.stock[k]>15?'disabled':''}>+5 (${fmt(i.cost*5)})</button></td></tr>`:`<tr><td>${i.n}<br><span class="muted">Chưa bán · lãi ${fmt(i.price-i.cost)}/cái</span></td><td></td><td><button class="g" data-u="${k}" ${S.money<i.u?'disabled':''}>Mở bán (${fmt(i.u)})</button></td></tr>`).join('')+'</table>'}
+ else if(tab=='rev')h=S.reviews.length?S.reviews.map((r,i)=>`<div class="rv"><b>${r.name}</b> <span class="st">${starStr(r.n)}</span> <span class="muted">· ngày ${r.d} · ${r.mark}</span><br>${r.text}${r.fake?` <button class="w" data-f="${i}">Báo cáo đánh giá giả</button>`:''}</div>`).join(''):'<p class="muted">Chưa có đánh giá. Điểm khởi đầu tính trung bình thận trọng, vài đánh giá đầu chưa làm điểm đổi nhiều.</p>';
+ else h=S.log.length?S.log.map(l=>`<div class="rv" style="color:${l.tag=='bad'?'var(--coral)':l.tag=='good'?'var(--mint)':'inherit'}"><span class="muted">Ngày ${l.d}</span> ${l.t}</div>`).join(''):'<p class="muted">Nhật ký giao dịch và điều tra sẽ hiện ở đây.</p>';
+ p.innerHTML=h}
+$('#panel').onclick=e=>{const row=e.target.closest('[data-th]');if(row)return openThread(+row.dataset.th);const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.e)return evAct(b.dataset.e);
+ if(b.dataset.u){const k=b.dataset.u,i=ITEMS[k];if(!S.unlocked.includes(k)&&S.money>=i.u){money(-i.u);S.unlocked.push(k);S.stock[k]+=5;addLog(`Mở bán ${i.n}, -${fmt(i.u)}.`);save();hud();renderPanel()}return}
+ if(b.dataset.r){const i=ITEMS[b.dataset.r];if(S.money>=i.cost*5){money(-i.cost*5);S.stock[b.dataset.r]+=5;addLog(`Nhập 5 ${i.n}, -${fmt(i.cost*5)}.`);save();hud();renderPanel()}}
+ if(b.dataset.f){const r=S.reviews[+b.dataset.f];if(r&&r.fake){S.sum-=r.n;S.cnt--;S.reviews.splice(+b.dataset.f,1);addLog('Báo cáo đánh giá giả, đã gỡ khỏi điểm uy tín.','good');save();hud();renderPanel();toast('Đã gỡ đánh giá giả')}}};
+function begin(g){S.guided=g;running=!S.pre;openT=null;$('#chat').style.display='none';$('#start').style.display='none';hud();renderTabs();renderPanel();view();save();if(running)spawnT=setTimeout(spawn,1500)}
+const old=load();if(!old)$('#bCont').style.display='none';
+$('#bNew').onclick=()=>{S=fresh();begin($('#guided').checked)};
+$('#bCont').onclick=()=>{S=old;begin(S.guided)};
+hud();renderTabs();renderPanel();view();
+</script></body></html>
